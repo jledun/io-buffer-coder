@@ -1,5 +1,5 @@
 {
-  "name": "io-buffer-coder",
+  "name": "io-buffer-worker",
   "version": "1.0.0",
   "description": "A node.js buffer encoder / decoder for PLC data communication",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jledun/io-buffer-coder.git"
+    "url": "git+https://github.com/jledun/io-buffer-worker.git"
   },
   "keywords": [
     "buffer",
@@ -19,7 +19,7 @@
   "author": "Julien Ledun <j.ledun@iosystems.fr>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jledun/io-buffer-coder/issues"
+    "url": "https://github.com/jledun/io-buffer-worker/issues"
   },
-  "homepage": "https://github.com/jledun/io-buffer-coder#readme"
+  "homepage": "https://github.com/jledun/io-buffer-worker#readme"
 }
