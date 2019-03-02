@@ -1,36 +1,71 @@
 [
   {
+    "plctype": "BOOL",
+    "buftype": "UInt8",
+    "length": 1,
+    "default": 0
+  }, {
     "plctype": "INT",
-    "buftype": "Int16"
+    "buftype": "Int16",
+    "length": 2,
+    "default": 0
   }, {
     "plctype": "UINT",
-    "buftype": "UInt16"
+    "buftype": "UInt16",
+    "length": 2,
+    "default": 0
   }, {
     "plctype": "DINT",
-    "buftype": "Int32"
+    "buftype": "Int32",
+    "length": 4,
+    "default": 0
   }, {
     "plctype": "UDINT",
-    "buftype": "UInt32"
+    "buftype": "UInt32",
+    "length": 4,
+    "default": 0
   }, {
     "plctype": "WORD",
-    "buftype": "Int16"
+    "buftype": "Int16",
+    "length": 2,
+    "default": 0
   }, {
     "plctype": "DWORD",
-    "buftype": "Int32"
+    "buftype": "Int32",
+    "length": 4,
+    "default": 0
   }, {
     "plctype": "REAL",
-    "buftype": "Float"
+    "buftype": "Float",
+    "length": 4,
+    "default": 0
   }, {
     "plctype": "BYTE",
-    "buftype": "UInt8"
+    "buftype": "UInt8",
+    "length": 1,
+    "default": 0
   }, {
     "plctype": "CHAR",
-    "buftype": "toString"
+    "buftype": "toString",
+    "length": 1,
+    "default": ""
   }, {
     "plctype": "STRING",
-    "buftype": "toString"
+    "buftype": "toString",
+    "default": ""
   }, {
     "plctype": "S7STRING",
-    "buftype": "toString"
+    "buftype": [
+      {
+        "buftype": "UInt8",
+        "length": 1
+      }, {
+        "buftype": "UInt8",
+        "length": 1
+      }, {
+        "buftype": "toString",
+        "default": ""
+      }
+    ]
   }
 ]

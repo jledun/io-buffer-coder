@@ -7,6 +7,8 @@ The data profile must always reflect the data table defined in the PLC.
 
 You're free to create the needed javascript object structure you need.
 
+I've built this library because it's not easy to define string length and boolean doesn't exist in Google's protocol buffer.
+
 # WORK IN PROGRESS
 
 # Install
@@ -55,7 +57,9 @@ Because `encode` and `decode` functions return promise, it can be used with asyn
 
 # Define buffer fields 
 
-## Description fields
+All length numbers is a count of bytes (8 bits) to stay close to the PLC data types, 'cos we're stick to low level programming ;-)
+
+## General representation of a field
 
 ```json
 {
@@ -63,8 +67,8 @@ Because `encode` and `decode` functions return promise, it can be used with asyn
   "type": "(string) the PLC data type",
   "default": "defaut value if object property is not defined before encoding",
   "offset": "(unsigned integer) the first byte position number",
-  "bitnumber": "(unsigned integer between 0 and 7) required for BOOL only : the bit position in the byte read at offset",
-  "length": (unsigned integer) required for STRING and CHAR only : length of the string or char array"
+  "bitnumber": "(unsigned integer between 0 and 7) required for 'BOOL' only : the bit position in the byte read at offset",
+  "length": (unsigned integer) required for 'STRING' and 'ARRAY OF ...' only : length of the string or char array"
 }
 ```
 
@@ -168,15 +172,15 @@ Because `encode` and `decode` functions return promise, it can be used with asyn
 }
 ```
 
-## CHAR[8]
+## ARRAY OF [BOOL|INT|UINT|WORD|DINT|UDINT|DWORD|REAL|BYTE|CHAR]
 
 ```json
 {
   "name": "fieldName",
-  "type": "CHAR",
-  "default": "",
-  "offset": 4,
-  "length": 8
+  "type": "ARRAY OF [BOOL|INT|UINT|WORD|DINT|UDINT|DWORD|REAL|BYTE|CHAR]",
+  "default": false,
+  "offset": 32,
+  "length": 64
 }
 ```
 
@@ -317,7 +321,19 @@ The example above will result in, the values are just example of what you should
 
 # Contributing
 
-Please, open an issue.
+Please, open an issue or a pull request.
+
+For your code contributions, please, keep in mind to stay as simple as possible and use functional programming as much as possible.
+
+All async function must return a promise, callbacks are not allowed.
+
+All errors must throw an error exception with locatable and unique message.
+
+Feel free to format your code or mine with documentation in english language.
+
+Because I learn javascript by myself and english is not my native language, there's surely a lack in documentation or spelling / grammar errors. Please, don't blame me and feel free to fix ;-)
+
+And also, you'll find some commits for backup : git is for versionning but it's also my backup tool, some commits may not be usefull but, by the way, that's how I work.
 
 # TODO
 
@@ -328,3 +344,4 @@ Please, open an issue.
 * Julien Ledun <j.ledun@iosystems.fr>
 
 Enjoy!
+
