@@ -48,6 +48,12 @@ const flattenData = (data, bdf) => {
   return tmp;
 }
 
+const getReadFunction = (plctype, bdf) => {
+}
+
+const getWriteFunction = (plctype, bdf) => {
+}
+
 const getTypeField = (plctype) => {
   return typeDefinitions.find(
     typedef => plctype.type.indexOf(typedef.plctype) > -1
