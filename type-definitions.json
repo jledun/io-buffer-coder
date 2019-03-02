@@ -1,0 +1,36 @@
+[
+  {
+    "plctype": "INT",
+    "buftype": "Int16"
+  }, {
+    "plctype": "UINT",
+    "buftype": "UInt16"
+  }, {
+    "plctype": "DINT",
+    "buftype": "Int32"
+  }, {
+    "plctype": "UDINT",
+    "buftype": "UInt32"
+  }, {
+    "plctype": "WORD",
+    "buftype": "Int16"
+  }, {
+    "plctype": "DWORD",
+    "buftype": "Int32"
+  }, {
+    "plctype": "REAL",
+    "buftype": "Float"
+  }, {
+    "plctype": "BYTE",
+    "buftype": "UInt8"
+  }, {
+    "plctype": "CHAR",
+    "buftype": "toString"
+  }, {
+    "plctype": "STRING",
+    "buftype": "toString"
+  }, {
+    "plctype": "S7STRING",
+    "buftype": "toString"
+  }
+]
