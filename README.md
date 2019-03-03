@@ -43,6 +43,10 @@ BufferWorker.decode('path/to/json/description/file.json', bufferToDecode, option
 
 Because `encode` and `decode` functions return promise, it can be used with async / await.
 
+**Options**
+
+* endianness : "BE" for Big Endian, "LE" for Little Endian
+
 # PLC Data types
 
 * BOOL (1 byte + bit number parameter)
@@ -51,9 +55,19 @@ Because `encode` and `decode` functions return promise, it can be used with asyn
 * DINT/UDINT/DWORD (4 bytes length)
 * REAL (4 bytes length)
 * CHAR (1 byte length)
-* CHAR[length] (`length` bytes as a parameter)
-* STRING[length] (`length` bytes as a parameter)
-* S7STRING[length] (`length` bytes as a parameter, Siemens typed string with maximum length et real length in the first two bytes)
+* ARRAY OF [BOOL | INT | UINT | DINT | UDINT | WORD | DWORD | REAL | CHAR] (`length` bytes as a parameter)
+* STRING (`length` bytes as a parameter, an alias for ARRAY OF CHAR)
+* S7STRING (`maxlength` and `length` are set by PLC, Siemens typed string with maximum length et real length in the first two bytes)
+
+**S7STRING format :**
+
+```javascript
+{
+  maxlength: 16, // Integer
+  length: 8,     // Integer
+  value: "value" // String
+}
+```
 
 # Define buffer fields 
 
@@ -71,6 +85,15 @@ All length numbers is a count of bytes (8 bits) to stay close to the PLC data ty
   "length": (unsigned integer) required for 'STRING' and 'ARRAY OF ...' only : length of the string or char array"
 }
 ```
+
+Types are :
+
+* boolean : BOOL,
+* integers : INT, UINT, DINT, UDINT,
+* binary : WORD, DWORD,
+* float : REAL,
+* string : CHAR, ARRAY OF CHAR, STRING (alias for ARRAY OF CHAR), S7STRING,
+* arrays : 
 
 ## BOOL
 

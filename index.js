@@ -48,15 +48,26 @@ const flattenData = (data, bdf) => {
   return tmp;
 }
 
-const getReadFunction = (plctype, bdf) => {
+const getReadFunction = (plctype, options) => {
+  return "".concat(
+    "read",
+    getTypeFunction(plctype, options)
+  );
 }
 
-const getWriteFunction = (plctype, bdf) => {
+const getWriteFunction = (plctype, options) => {
 }
 
 const getTypeField = (plctype) => {
   return typeDefinitions.find(
     typedef => plctype.type.indexOf(typedef.plctype) > -1
+  );
+}
+
+const getTypeFunction = (plctype, options) => {
+  return "".concat(
+    getTypeField(plctype).buftype,
+    options.endianness
   );
 }
 
@@ -75,6 +86,7 @@ const checkTypeField = (plctype) => {
   if (plctype.type.indexOf('BOOL') > -1 && !plctype.hasOwnProperty('bitnumber')) throw new Error(`missing 'bitnumber' field`, plctype);
   if (plctype.type.indexOf('STRING') > -1 && (!plctype.hasOwnProperty('length') || plctype.length <= 0)) throw new Error(`missing or null length`, plctype);
   if (plctype.type.indexOf('ARRAY') > -1 && (!plctype.hasOwnProperty('length') || plctype.length <= 0)) throw new Error(`missing or null length`, plctype);
+  if (plctype.type.indexOf('ARRAY') > -1 && plctype.type.indexOf('STRING') > -1) throw new Error(`ARRAY OF STRING or ARRAY OF S7STRING are not implemented yet :-(`, plctype);
   return true;
 }
 
@@ -127,15 +139,84 @@ const init = (defPath) => {
   });
 }
 
+const readFieldFromBuffer = (buffer, field, options) => {
+  const tmp = {...getTypeField(field), ...field};
+  switch(tmp.plctype) {
+    case "CHAR":
+    case "STRING":
+      return buffer[getReadFunction(tmp, options)]('ascii', tmp.offset, tmp.offset + tmp.length);
+
+    case "S7STRING":
+      let offset = tmp.offset;
+      let stringObject = {};
+      stringObject.maxlength = buffer[getReadFunction(buftype.maxlength, options)](offset);
+      offset += buftype.maxlength.length;
+      stringObject.length = buffer[getReadFunction(buftype.length, options)](offset);
+      offset += buftype.length.length;
+      stringObject.value = buffer[getReadFunction(buftype.value, options)]('ascii', offset, offset + stringObject.length);
+      return stringObject;
+
+    default:
+      return buffer[getReadFunction(tmp, options)](tmp.offset);
+  }
+}
+
+const createBDFForArrayOf = (field) => {
+  const arrayType = getTypeField(field);
+  let tmp = [];
+  let offset = field.offset;
+  for (let i = 0; i < field.length; i++) {
+    tmp.push({
+      ...field,
+      ...{
+        type: arrayType.plctype,
+        offset: offset
+      }
+    });
+    offset += arrayType.length;
+  }
+  return tmp;
+}
+
+const readArrayOfFieldFromBuffer = (buffer, field, options) => {
+  const arraybdf = createBDFForArrayOf(field);
+  return {[field.name]: arraybdf.map(arraybdfitem => readFromBuffer(buffer, arraybdfitem, options))};
+}
+
+const readFromBuffer = (buffer, field, options) => {
+  const isArrayOf = field.type.indexOf("ARRAY") > -1;
+  return (isArrayOf) ?
+    readArrayOfFieldFromBuffer(buffer, field, options) :
+    readFieldFromBuffer(buffer, field, options);
+}
+
+const parseBuffer = (buffer, bdf, options) => {
+  let tmp = {};
+  bdf.forEach(field => {
+    if (field.hasOwnProperty('properties')) {
+      tmp = {...tmp, ...parseBuffer(buffer, field.properties, options)};
+
+    }else if (field.hasOwnProperty('array')) {
+      tmp = {...tmp, ...{[field.name]: field.array.map(arrayField => parseBuffer(buffer, arrayField, options))}};
+
+    }else{
+      tmp = {...tmp, ...{[field.name]: readFromBuffer(buffer, field, options)}};
+
+    }
+  });
+  return tmp;
+}
+
 const BufferWorker = {
   defaultOptions: {
-    endianess: "BE"
+    endianness: "BE"
   },
   encode: (bufferDescriptionFilePath, data, options) => {
     return new Promise(async (resolve, reject) => {
       const defPath = bufferDescriptionFilePath;
       const opt = {...BufferWorker.defaultOptions, ...options};
       try{
+        console.log(data);
         const bdf = await init(defPath);
         checkData(data, bdf);
         return resolve(bdf);
@@ -151,7 +232,7 @@ const BufferWorker = {
       try{
         const bdf = await init(defPath);
         checkBuffer(buffer, bdf);
-        return resolve(bdf);
+        return resolve(parseBuffer(buffer, bdf, options));
       }catch(e){
         return reject(e);
       }

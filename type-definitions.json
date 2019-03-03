@@ -55,17 +55,27 @@
     "default": ""
   }, {
     "plctype": "S7STRING",
-    "buftype": [
-      {
+    "buftype": {
+      "maxlength": {
+        "type": "BYTE",
+        "plctype": "BYTE",
         "buftype": "UInt8",
+        "default": 0,
         "length": 1
-      }, {
+      },
+      "length": {
+        "type": "BYTE",
+        "plctype": "BYTE",
         "buftype": "UInt8",
+        "default": 0,
         "length": 1
-      }, {
+      },
+      "value": {
+        "type": "STRING",
+        "plctype": "STRING",
         "buftype": "toString",
         "default": ""
       }
-    ]
+    }
   }
 ]
