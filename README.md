@@ -9,8 +9,6 @@ You're free to create the needed javascript object structure you need.
 
 I've built this library because it's not easy to define string length and boolean doesn't exist in Google's protocol buffer.
 
-# WORK IN PROGRESS
-
 # Install
 
 ```bash
