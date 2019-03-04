@@ -113,7 +113,7 @@ All length numbers is a count of bytes (8 bits) to stay close to the PLC data ty
   "type": "(string) the PLC data type",
   "default": "defaut value if object property is not defined before encoding",
   "offset": "(unsigned integer) the first byte position number",
-  "bitnumber": "(unsigned integer between 0 and 7) required for 'BOOL' only : the bit position in the byte read at offset",
+  "bitnumber": "(unsigned integer between 0 and 15) required for 'BOOL' only : the bit position in the byte read at offset",
   "length": "(unsigned integer) required for 'STRING' and 'ARRAY OF ...' only : length of the string or char array",
   "properties": "(array of properties) required to define an object",
   "array": "(array of array of properties) required to define an array of objects"
@@ -122,7 +122,7 @@ All length numbers is a count of bytes (8 bits) to stay close to the PLC data ty
 
 ## PLC Data types
 
-* BOOL (1 byte + bit number parameter)
+* BOOL (2 bytes + bit number parameter, from 0 to 15)
 * BYTE (1 byte length)
 * INT/UINT/WORD (2 bytes length)
 * DINT/UDINT/DWORD (4 bytes length)
